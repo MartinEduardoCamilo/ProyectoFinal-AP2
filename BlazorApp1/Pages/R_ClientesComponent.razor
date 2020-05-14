@@ -1,0 +1,143 @@
+﻿@page "/R_ClientesComponest"
+
+@using BlazorApp1.Controllers;
+@using BlazorApp1.Data;
+@using BlazorApp1.Models;
+
+<h3>R_ClientesComponent</h3>
+
+<EditForm Model="clientes" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <label for="Id">ID</label>
+    <div class="input-group">
+        <InputNumber @bind-Value="clientes.ClienteId" class="form-control"></InputNumber>
+        <ValidationMessage For="(() => clientes.ClienteId)"></ValidationMessage>
+        <div class="input-group-append">
+            <button type="button" class="btn btn-primary" @onclick="Buscar">Buscar</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="NOMBRE">NOMBRE</label>
+        <InputText @bind-Value="clientes.Nombre" class="form-control"></InputText>
+        <ValidationMessage For="(() => clientes.Nombre)"></ValidationMessage>
+    </div>
+
+    <div class="form-group">
+        <label for="APELLIDO">APELLIDO</label>
+        <InputText @bind-Value="clientes.Apellido" class="form-control"></InputText>
+        <ValidationMessage For="(() => clientes.Apellido)"></ValidationMessage>
+    </div>
+
+    <div class="form-group">
+        <label for="DIRECCION">DIRECCION</label>
+        <InputText @bind-Value="clientes.Direccion" class="form-control"></InputText>
+        <ValidationMessage For="(() => clientes.Direccion)"></ValidationMessage>
+    </div>
+
+    <div class="form-group">
+        <label for="TELEFONO">TELEFONO</label>
+        <InputText @bind-Value="clientes.Telefono" class="form-control"></InputText>
+        <ValidationMessage For="(() => clientes.Telefono)"></ValidationMessage>
+    </div>
+
+    <div class="form-group">
+        <label for="EMAIL">EMAIL</label>
+        <InputText @bind-Value="clientes.Email" class="form-control"></InputText>
+        <ValidationMessage For="(() => clientes.Email)"></ValidationMessage>
+    </div>
+
+    <div class="form-group">
+        <label for="TELEFONO">TELEFONO</label>
+        <InputText @bind-Value="clientes.Telefono" class="form-control"></InputText>
+        <ValidationMessage For="(() => clientes.Telefono)"></ValidationMessage>
+    </div>
+
+
+    <div class="form-group">
+        <button type="button" class="btn btn-secondary" @onclick="Nuevo">
+            Nuevo
+        </button>
+        <button type="submit" class="btn btn-success" @onclick="Guardar">
+            Guardar
+        </button>
+        <button type="button" class="btn btn-danger" @onclick="Eliminar">
+            Eliminar
+        </button>
+
+    </div>
+
+    <h3>@Mensaje</h3>
+
+</EditForm>
+
+@code {
+
+    Clientes clientes = new Clientes();
+    private string Mensaje;
+
+    private bool ExisteEnLaBaseDeDatos()
+    {
+        RepositorioBase<Clientes> control = new RepositorioBase<Clientes>();
+        Clientes _cliente = control.Buscar(clientes.ClienteId);
+        return (_cliente != null);
+    }
+
+    private void Nuevo()
+    {
+        this.clientes = new Clientes();
+        Mensaje = "";
+    }
+
+    private void Guardar()
+    {
+        RepositorioBase<Clientes> control = new RepositorioBase<Clientes>();
+        bool paso = true;
+        if (clientes.ClienteId == 0)
+        {
+            paso = control.Guardar(clientes);
+
+        }
+        else
+        {
+            paso = control.Modificar(clientes);
+
+        }
+
+        if (paso)
+        {
+            Mensaje = "Guardado Correctamente..";
+        }
+
+    }
+
+    private void Eliminar()
+    {
+        bool paso = true;
+        RepositorioBase<Clientes> control = new RepositorioBase<Clientes>();
+        paso = control.Eliminar(clientes.ClienteId);
+
+
+        if (paso)
+        {
+            Nuevo();
+            Mensaje = "Eliminado Correctamente...";
+        }
+
+
+    }
+
+    private void Buscar()
+    {
+        Mensaje = "";
+        RepositorioBase<Clientes> clientes = new RepositorioBase<Clientes>();
+        Clientes cliente = new Clientes();
+        cliente = clientes.Buscar(this.clientes.ClienteId);
+
+        if (cliente != null)
+        {
+            this.clientes = cliente;
+        }
+    }
+}
