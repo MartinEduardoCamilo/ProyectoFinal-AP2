@@ -8,6 +8,7 @@ namespace BlazorApp1.Models
 {
     public class Eventos
     {
+        //Validar
         [Key]
         public int EventoId { get; set; }
         public int ClienteId { get; set; }
